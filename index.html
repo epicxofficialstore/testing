@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EpicX Store</title>
+  <style>
+.auto-scroll-container {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  margin-top: 20px;
+  background-color: transparent;
+}
+
+.auto-scroll-text {
+  display: inline-block;
+  white-space: nowrap;
+  animation: scroll-left-text 15s linear infinite;
+}
+
+.scroll-text-inner {
+  display: inline-block;
+}
+
+.scroll-text-inner span {
+  margin-right: 80px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  font-family: 'Montserrat', sans-serif;
+  color: #00d0ff;
+}
+
+@keyframes scroll-left-text {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+    :root {
+      --bg-color: #fff;
+      --text-color: #111;
+      --btn-bg: #111;
+      --btn-text: #fff;
+    }
+    body.dark-mode {
+      --bg-color: #111;
+      --text-color: #fff;
+      --btn-bg: #fff;
+      --btn-text: #000;
+    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      transition: 0.3s ease;
+    }
+    header {
+      position: relative;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 1rem;
+      background-color: #000;
+      color: #fff;
+    }
+    .menu {
+      font-size: 28px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .welcome-banner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: bold;
+      color: yellow;
+      font-size: 16px;
+      pointer-events: none;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -250px;
+      width: 250px;
+      height: 100%;
+      background-color: #111;
+      color: white;
+      padding-top: 20px;
+      transition: 0.3s;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid white;
+      background: transparent;
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+    }
+   .sidebar a,
+.close-btn,
+.menu {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  user-select: none;
+}
+
+.sidebar a:active,
+.close-btn:active,
+.menu:active {
+  background: none;
+  transform: none;
+  box-shadow: none;
+}
+    .close-btn:hover {
+      background: white;
+      color: #111;
+    }
+    .sidebar a {
+      display: block;
+      padding: 15px 25px;
+      text-decoration: none;
+      color: black;
+      font-weight: 600;
+      background-color: white;
+      border-radius: 8px;
+      margin: 10px 20px;
+    }
+    .sidebar a.active,
+    .sidebar a:hover {
+      background-color: #ddd;
+    }
+    .dark-mode-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 25px;
+      font-weight: 600;
+      font-family: 'Montserrat', sans-serif;
+      background-color: white;
+      border-radius: 8px;
+      margin: 10px 20px;
+      color: black;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 25px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+    input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      z-index: 900;
+    }
+    main {
+      padding: 1rem;
+      margin-top: 60px;
+      text-align: center;
+    }
+    .epicx-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  margin-top: -10px;
+}
+    .epicx-header img {
+      height: 150px;
+      width: auto;
+    }
+    .epicx-header span {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 3rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+    .channel-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px auto 10px auto;
+      color: green;
+      font-weight: bold;
+      text-align: center;
+      gap: 8px;
+      font-size: 18px;
+      max-width: 300px;
+    }
+    .channel-link img {
+      width: 20px;
+      height: 20px;
+    }
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.5rem;
+      margin-top: 10px;
+      color: var(--text-color);
+    }
+    .buttons {
+      text-align: center;
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 12px 24px;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      width: 210px;
+    }
+    .btn:hover {
+      opacity: 0.8;
+    }
+    footer {
+      text-align: center;
+      padding: 40px 20px 20px 20px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    footer h2 {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .contact-icons {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .contact-icons img {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      transition: transform 0.2s ease;
+    }
+    .contact-icons img:hover {
+      transform: scale(1.1);
+    }
+    .payment-scroll-container {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      margin-top: 40px;
+    }
+    .payment-scroll {
+      display: flex;
+      animation: scroll-left 15s linear infinite;
+      width: fit-content;
+    }
+    .payment-scroll-inner {
+      display: flex;
+      gap: 60px;
+    }
+    .payment-scroll-inner img {
+      height: 60px;
+      width: auto;
+      object-fit: contain;
+    }
+    .payment-scroll-inner img:last-child {
+      margin-right: 60px;
+    }
+    @keyframes scroll-left {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="menu" onclick="toggleSidebar()" aria-label="Toggle Menu">&#9776;</div>
+    <div class="welcome-banner" aria-hidden="true">𝗪𝗲𝗹𝗰𝗼𝗺𝗲 𝘁𝗼 𝗘𝗽𝗶𝗰𝗫</div>
+  </header>
+
+  <div class="sidebar" id="sidebar" aria-label="Sidebar navigation">
+    <button class="close-btn" onclick="toggleSidebar()" aria-label="Close Sidebar">×</button>
+    <div style="padding: 10px 25px 0 25px;">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250601_232351.png" alt="EpicX Logo" style="height: 40px;" />
+        <span style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: bold;">EpicX</span>
+      </div>
+    </div>
+
+    <a href="#" class="active" onclick="navigateTo('home')"><img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250607_162646%20(1)%20(1).png" 
+     alt="Terms Icon" 
+     style="width: 20px; height: 20px; margin-right: 8px;">HOME</a>
+    <a href="mlbb.html"><img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250607_163038.png" 
+     alt="Terms Icon" 
+     style="width: 20px; height: 20px; margin-right: 8px;">MLBB DIAMOND</a>
+    <a href="instagram.html"><img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/black-instagram-icon%20(1).png" 
+     alt="Terms Icon" 
+     style="width: 20px; height: 20px; margin-right: 8px;">INSTAGRAM SERVICES</a>
+    <div class="dark-mode-toggle">
+      <span><img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/dark-mode-icon%20(1).png" 
+     alt="Terms Icon" 
+     style="width: 20px; height: 20px; margin-right: 8px;">Dark Mode</span>
+      <label class="switch">
+        <input type="checkbox" id="modeToggle" onchange="toggleMode()" aria-label="Toggle dark mode" />
+        <span class="slider"></span>
+      </label>
+    </div>
+    <a href="privacy.html"><img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/privacy-policy-icon%20(1).png" 
+     alt="Terms Icon" 
+     style="width: 20px; height: 20px; margin-right: 8px;">PRIVACY POLICY</a>
+    <a href="refund.html"><img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/refund.png" 
+     alt="Terms Icon" 
+     style="width: 20px; height: 20px; margin-right: 8px;">REFUND POLICY</a>
+    <a href="terms.html"><img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/terms-and-conditions-icon%20(1).png" 
+     alt="Terms Icon" 
+     style="width: 20px; height: 20px; margin-right: 8px;">TERMS & CONDITIONS</a>
+    <a href="support.html"><img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250607_164324.png" 
+     alt="Terms Icon" 
+     style="width: 20px; height: 20px; margin-right: 8px;">24/7 SUPPORT</a>
+  </div>
+
+  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+  <main id="main-content">
+  <div class="auto-scroll-container">
+  <div class="auto-scroll-text">
+    <div class="scroll-text-inner">
+      <span>[𝗔𝘂𝘁𝗼 𝗶𝗻𝘀𝘁𝗮𝗻𝘁 𝘁𝗼𝗽 𝘂𝗽 ⚡ 𝟮𝟰/𝟳 𝘀𝗲𝗿𝘃𝗶𝗰𝗲]</span>
+      <span>[𝗔𝘂𝘁𝗼 𝗶𝗻𝘀𝘁𝗮𝗻𝘁 𝘁𝗼𝗽 𝘂𝗽 ⚡ 𝟮𝟰/𝟳 𝘀𝗲𝗿𝘃𝗶𝗰𝗲]</span>
+      <span>[𝗔𝘂𝘁𝗼 𝗶𝗻𝘀𝘁𝗮𝗻𝘁 𝘁𝗼𝗽 𝘂𝗽 ⚡ 𝟮𝟰/𝟳 𝘀𝗲𝗿𝘃𝗶𝗰𝗲]</span>
+      <span>[𝗔𝘂𝘁𝗼 𝗶𝗻𝘀𝘁𝗮𝗻𝘁 𝘁𝗼𝗽 𝘂𝗽 ⚡ 𝟮𝟰/𝟳 𝘀𝗲𝗿𝘃𝗶𝗰𝗲]</span>
+    </div>
+  </div>
+</div>
+    <div class="epicx-header">
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250601_232351.png" alt="EpicX Logo" />
+      <span>EpicX</span>
+    </div>
+
+    <h1>𝐒𝐚𝐟𝐞 𝐚𝐧𝐝 𝐅𝐚𝐬𝐭 𝐑𝐞𝐜𝐡𝐚𝐫𝐠𝐞</h1>
+
+    <a href="https://whatsapp.com/channel/0029Vb6517xEawe0Eqj73S0O" target="_blank" class="channel-link" rel="noopener noreferrer">
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp Logo" />
+      Join our WhatsApp Channel
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp Logo" />
+    </a>
+
+    <style>
+  .service-row {
+    display: flex;
+    justify-content: flex-start;
+    gap: 14px;
+    padding-left: 16px;
+    margin-top: 20px;
+  }
+
+  .service-box {
+    width: 100px;
+    height: 150px;
+    border-radius: 16px;
+    padding: 10px;
+    background-color: #fff;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: var(--text-color);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border: 1.5px solid #ddd; /* Light border for visibility in light mode */
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05); /* Soft shadow */
+    transition: none;
+  }
+
+  body.dark-mode .service-box {
+    background-color: #222;
+    border: 1.5px solid #444;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.05);
+  }
+
+  .service-box img {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    pointer-events: none;
+  }
+
+  .service-box span {
+    margin-top: 6px;
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  .topup-btn {
+    margin-top: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #111;
+    color: #fff;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    pointer-events: none;
+  }
+
+  body.dark-mode .topup-btn {
+    background-color: #fff;
+    color: #000;
+  }
+
+  a {
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  a:focus, a:active, a:hover {
+    outline: none;
+    background: none;
+  }
+</style>
+
+<div class="service-row">
+  <a href="instagram.html">
+    <div class="service-box">
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250613_154110.png" alt="Instagram" />
+      <span>Instagram Boosting</span>
+      <div class="topup-btn">Top Up</div>
+    </div>
+  </a>
+  <a href="mlbb.html">
+    <div class="service-box">
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744466955397--mb%20(1).jpg" alt="Mobile Legends" />
+      <span>Mobile Legends</span>
+      <div class="topup-btn">Top Up</div>
+    </div>
+  </a>
+</div>
+  </main>
+  
+  <footer>
+    <style>
+  .how-it-works-section {
+    margin-top: 60px;
+    text-align: center;
+    padding: 0 16px;
+  }
+
+  .how-it-works-section h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+    color: #00d0ff;
+    margin-bottom: 30px;
+  }
+
+  .how-it-works-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    justify-content: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .how-box {
+    background-color: #1a1a1a;
+    border: 2px solid #00d0ff;
+    border-radius: 12px;
+    padding: 20px;
+    color: white;
+    height: 180px;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .how-box-icon {
+    font-size: 30px;
+    margin-bottom: 12px;
+    color: #00d0ff;
+  }
+
+  .how-box-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .how-box-text {
+    font-size: 0.85rem;
+    color: #ccc;
+    text-align: center;
+  }
+
+  body:not(.dark-mode) .how-box {
+    background-color: #fff;
+    color: #000;
+    border: 2px solid #00d0ff;
+  }
+
+  body:not(.dark-mode) .how-box-text {
+    color: #555;
+  }
+
+  body:not(.dark-mode) .how-box-icon {
+    color: #00b3e6;
+  }
+</style>
+
+<div class="how-it-works-section">
+  <h2>HOW IT WORKS</h2>
+  <div class="how-it-works-grid">
+    <div class="how-box">
+      <div class="how-box-icon">🚚</div>
+      <div class="how-box-title">Instant Delivery</div>
+      <div class="how-box-text">Get your items instantly, 24/7.</div>
+    </div>
+    <div class="how-box">
+      <div class="how-box-icon">🔒</div>
+      <div class="how-box-title">Secure & Legit</div>
+      <div class="how-box-text">Reliable and trusted services.</div>
+    </div>
+    <div class="how-box">
+      <div class="how-box-icon">🌐</div>
+      <div class="how-box-title">Easy Payments</div>
+      <div class="how-box-text">Flexible and secure options.</div>
+    </div>
+    <div class="how-box">
+      <div class="how-box-icon">🎧</div>
+      <div class="how-box-title">24/7 Support</div>
+      <div class="how-box-text">Always here to help you.</div>
+    </div>
+  </div>
+</div>
+    <p style="font-size: 1.1rem; letter-spacing: 1px; font-weight: 500;">CUSTOMER SERVICE</p>
+    <h2>Reach Us At</h2>
+    <div class="contact-icons">
+      <a href="https://wa.me/9863233972" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp" />
+      </a>
+      <a href="mailto:epicxofficialstore@gmail.com" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Gmail" />
+      </a>
+    </div>
+
+    <div style="text-align:center; margin-top: 60px;">
+      <h2 style="font-size: 1.8rem; font-weight: bold;">Payment Channels</h2>
+      <div class="payment-scroll-container" aria-label="Payment logos scrolling">
+        <div class="payment-scroll">
+          <div class="payment-scroll-inner" aria-hidden="true">
+            <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/upi.692cbaa1d8aff635a377.png" alt="UPI" />
+            <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/paytm.9a79eb7fd3b4cdb56806.png" alt="Paytm" />
+            <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/phonepe.8cc814173179468b5a21.png" alt="PhonePe" />
+            <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/gpay.d5b2af443eda82127eeb.png" alt="GPay" />
+            <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/fampay.a81ddb56196c753a7903.png" alt="FamPay" />
+          </div>
+          <div class="payment-scroll-inner" aria-hidden="true">
+            <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/upi.692cbaa1d8aff635a377.png" alt="UPI" />
+            <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/paytm.9a79eb7fd3b4cdb56806.png" alt="Paytm" />
+            <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/phonepe.8cc814173179468b5a21.png" alt="PhonePe" />
+            <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/gpay.d5b2af443eda82127eeb.png" alt="GPay" />
+            <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/fampay.a81ddb56196c753a7903.png" alt="FamPay" />
+          </div>
+        </div>
+      </div>
+      <p style="margin-top: 30px; font-size: 1rem; font-family: 'Montserrat', sans-serif; font-weight: 600; letter-spacing: 1px;">
+        All Rights Reserved © 2025 | EpicX Official Store
+      </p>
+    </div>
+  </footer>
+
+  <script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+
+    if (sidebar.style.left === "0px") {
+      sidebar.style.left = "-250px";
+      overlay.style.display = "none";
+      document.body.style.overflow = "auto";
+    } else {
+      sidebar.style.left = "0px";
+      overlay.style.display = "block";
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  function navigateTo(section) {
+    if (section === 'home') {
+      document.getElementById('main-content').scrollIntoView({ behavior: 'smooth' });
+    }
+    toggleSidebar();
+  }
+
+  function toggleMode() {
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("theme", document.body.classList.contains("dark-mode") ? "dark" : "light");
+  }
+
+  window.onload = () => {
+    const theme = localStorage.getItem("theme");
+    document.body.classList.toggle("dark-mode", theme === "dark");
+    document.getElementById("modeToggle").checked = theme === "dark";
+  };
+</script>
+</body>
+</html>
