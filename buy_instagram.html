@@ -49,21 +49,16 @@
     }
 
     h1 {
-      color: var(--highlight);
-      font-size: 28px;
+      color: #00cfff;
+      font-size: 24px;
       text-align: center;
-      margin-bottom: 5px;
-    }
-
-    h3 {
-      color: var(--accent);
-      text-align: center;
-      margin: 10px 0;
+      margin-bottom: 10px;
     }
 
     .summary-info {
       font-size: 16px;
-      margin-bottom: 10px;
+      font-weight: bold;
+      margin-bottom: 20px;
       text-align: center;
     }
 
@@ -85,27 +80,6 @@
       border: 1px solid #555;
     }
 
-    #qrCode {
-      width: 200px;
-      height: 200px;
-      margin: 20px 0;
-      border-radius: 10px;
-      background: white;
-      padding: 10px;
-    }
-
-    .dark #qrCode {
-      background: #fff;
-    }
-
-    .instructions {
-      max-width: 400px;
-      text-align: center;
-      font-size: 15px;
-      line-height: 1.5;
-      margin-bottom: 15px;
-    }
-
     button {
       width: 100%;
       max-width: 320px;
@@ -122,6 +96,32 @@
 
     button:hover {
       background-color: var(--button-bg-hover);
+    }
+
+    .payment-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .dark .payment-box {
+      background: #fff;
+    }
+
+    .payment-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      padding: 0 20px;
     }
 
     #orderModal {
@@ -175,17 +175,41 @@
   </style>
 </head>
 <body>
-  <h1>Buy Instagram Services</h1>
-  <h3 id="priceDisplay">Price: ₹--</h3>
+  <h1>Choose The Payment Methods</h1>
+  <p id="selectedInfo" class="summary-info"></p>
 
-  <div class="summary-info" id="selectedInfo"></div>
+  <div class="payment-section">
+    <!-- Payment Logos -->
+    <a href="#" id="upiLink" target="_blank" class="payment-box">
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/upi.692cbaa1d8aff635a377.png" alt="UPI" style="height: 45px;" />
+      <span id="upiPrice" style="color: #000; font-weight: bold;">₹0</span>
+    </a>
 
-  <img id="qrCode" src="" alt="QR Code" />
+    <a href="#" id="paytmLink" target="_blank" class="payment-box">
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/paytm.9a79eb7fd3b4cdb56806.png" alt="Paytm" style="height: 45px;" />
+      <span id="paytmPrice" style="color: #000; font-weight: bold;">₹0</span>
+    </a>
 
-  <div class="instructions">
-    <p>1. Scan the QR code above to pay the exact amount.</p>
+    <a href="#" id="gpayLink" target="_blank" class="payment-box">
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/gpay.d5b2af443eda82127eeb.png" alt="GPay" style="height: 45px;" />
+      <span id="gpayPrice" style="color: #000; font-weight: bold;">₹0</span>
+    </a>
+
+    <a href="#" id="phonepeLink" target="_blank" class="payment-box">
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/phonepe.8cc814173179468b5a21.png" alt="PhonePe" style="height: 45px;" />
+      <span id="phonepePrice" style="color: #000; font-weight: bold;">₹0</span>
+    </a>
+
+    <a href="#" id="fampayLink" target="_blank" class="payment-box">
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/main/fampay.a81ddb56196c753a7903.png" alt="Fampay" style="height: 45px;" />
+      <span id="fampayPrice" style="color: #000; font-weight: bold;">₹0</span>
+    </a>
+  </div>
+
+  <div class="instructions" style="margin-top: 20px;">
+    <p>1. Tap on any payment method above to pay the exact amount.</p>
     <p>2. Take a screenshot of your payment confirmation.</p>
-    <p>3. Fill your Instagram Username, Post Link and upload a Payment screenshot below and click CONFIRM.</p>
+    <p>3. Fill your Instagram Username, Post Link and upload a screenshot below.</p>
   </div>
 
   <input type="text" id="username" placeholder="Instagram Username" />
@@ -220,12 +244,15 @@
 
     function updateDisplayFromParams() {
       const { service, qty, price } = getQueryParams();
-      document.getElementById("selectedInfo").innerText = `${qty} ${service} – ₹${price}`;
-      document.getElementById("priceDisplay").innerText = `Price: ₹${price}`;
+      const upiURL = `upi://pay?pa=bilachingman@oksbi&pn=EpicX&am=${price}&cu=INR`;
 
-      const upiUrl = `upi://pay?pa=bilachingman-1@okaxis&pn=EpicX%20Insta&am=${price}&cu=INR`;
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
-      document.getElementById('qrCode').src = qrUrl;
+      document.getElementById("selectedInfo").innerText = `${qty} ${service} – ₹${price}`;
+
+      const logoIds = ["upi", "paytm", "gpay", "phonepe", "fampay"];
+      logoIds.forEach(id => {
+        document.getElementById(`${id}Link`).href = upiURL;
+        document.getElementById(`${id}Price`).innerText = `₹${price}`;
+      });
     }
 
     function closeModal() {
