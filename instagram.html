@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Instagram Services- EpicX</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-color: #f8f8f8;
+      --text-color: #222;
+      --notice-bg: #ffe6e6;
+      --notice-border: #ff4d4d;
+      --notice-strong: #d60000;
+      --notice-text: #333;
+      --service-bg: #fff;
+      --service-border: #ddd;
+      --btn-bg: #000;
+      --btn-text: #fff;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --text-color: #f0f0f0;
+      --notice-bg: #2c1a1a;
+      --notice-border: #ff4d4d;
+      --notice-strong: #ff4d4d;
+      --notice-text: #e0e0e0;
+      --service-bg: #1e1e1e;
+      --service-border: #333;
+      --btn-bg: #fff;
+      --btn-text: #000;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    main {
+      padding: 20px;
+      max-width: 100%;
+      margin: auto;
+    }
+
+    h2 {
+      font-size: 2rem;
+      color: var(--text-color);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .notice {
+      background-color: var(--notice-bg);
+      border: 1px solid var(--notice-border);
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .notice strong {
+      font-size: 1.1rem;
+      color: var(--notice-strong);
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .notice p {
+      font-size: 1rem;
+      color: var(--notice-text);
+      margin: 0 auto 15px;
+      max-width: 700px;
+    }
+
+    .notice .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 6px;
+      min-width: 240px;
+    }
+
+    .service-section {
+      margin-bottom: 40px;
+    }
+
+    .service-section h3 {
+      font-size: 1.6rem;
+      margin-top: 30px;
+      color: var(--text-color);
+      text-align: center;
+    }
+
+   .service-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
+  padding: 10px 0;
+}
+
+    .service {
+  background-color: var(--service-bg);
+  padding: 12px;
+  border: 1px solid var(--service-border);
+  border-radius: 6px;
+  text-align: center;
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
+  transition: background-color 0.3s, color 0.3s, border 0.3s;
+  cursor: pointer;
+}
+.service.selected {
+  background-color: #ffe066 !important; /* Light yellow */
+  border: 2px solid #ffcc00;
+  color: #000000 !important; /* text dark so visible on yellow */
+}
+
+.service.selected del {
+  color: #cc0000 !important;
+}
+    .service p {
+  margin: 0 0 10px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--text-color); /* already handled */
+}
+
+[data-theme="dark"] .service p {
+  color: #ffffff; /* brighter white for price text */
+}
+
+[data-theme="dark"] .service del {
+  color: #ff8080; /* lighter red for strikethrough in dark mode */
+}
+
+    .btn {
+      display: inline-block;
+      padding: 10px 15px;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Optional scrollbar styling */
+    .service-wrapper::-webkit-scrollbar {
+      height: 6px;
+    }
+    .service-wrapper::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+    }
+    .service-wrapper::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  </style>
+  <script>
+    window.onload = function () {
+      const theme = localStorage.getItem("theme");
+      if (theme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+      } else {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    };
+  </script>
+</head>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const services = document.querySelectorAll(".service");
+
+    services.forEach(service => {
+      service.addEventListener("click", () => {
+        // Deselect all
+        services.forEach(s => s.classList.remove("selected"));
+        service.classList.add("selected");
+
+        // Extract info from text content
+        const text = service.innerText;
+        const match = text.match(/(\d[\d,]*)\s+(\w+)\s+-\s+₹(\d+)/);
+
+        if (!match) return;
+
+        const qty = match[1].replace(/,/g, '');
+        const serviceType = match[2];
+        const price = match[3];
+
+        // Create/update Continue button
+        let btn = document.getElementById("continue-btn");
+        if (!btn) {
+          btn = document.createElement("a");
+          btn.id = "continue-btn";
+          btn.className = "btn";
+          btn.style.display = "block";
+          btn.style.margin = "12px auto 0";
+          btn.style.backgroundColor = "#00bfff";
+          btn.style.color = "#fff";
+          btn.style.textAlign = "center";
+        }
+
+        // Set dynamic href
+        btn.href = `buy_instagram.html?service=${serviceType}&qty=${qty}&price=${price}`;
+        btn.textContent = "Continue";
+
+        // Append to selected service box
+        service.appendChild(btn);
+      });
+    });
+
+    // 👇 Yeh line auto-click karega selected box pe
+    const preselected = document.querySelector(".service.selected");
+    if (preselected) preselected.click();
+  });
+</script>
+<body>
+  <main>
+    <h2>⚡Instant Delivery Supported</h2>
+
+    <div class="notice">
+      <strong> 🕒 𝐃𝐞𝐥𝐢𝐯𝐞𝐫𝐲 𝐓𝐢𝐦𝐞: Instant</strong>
+      <p></p></a>
+      </div>
+
+    <div class="note">
+      <p><strong>𝐍𝐎𝐓𝐄 :</strong> Kindly switch your Instagram account to public if it’s private, so we can proceed with the service.</p>
+      
+    <div style="text-align: center; margin-top: 40px;">
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250526_192824.png" alt="EpicX Logo" style="width: 100%; max-width: 100vw; height: auto; display: block;" />
+    </div>
+
+    <!-- Followers -->
+<div class="service-section">
+  <h3> 𝐅𝐎𝐋𝐋𝐎𝐖𝐄𝐑𝐒 </h3>
+  <div class="service-wrapper">
+    <div class="service selected"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135217%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    50 Followers - ₹16 <del style="color: #e60026;">₹25</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135217%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    100 Followers - ₹30 <del style="color: #e60026;">₹45</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135217%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    200 Followers - ₹58 <del style="color: #e60026;">₹79</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135217%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    500 Followers - ₹139 <del style="color: #e60026;">₹199</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135217%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    1,000 Followers - ₹269 <del style="color: #e60026;">₹379</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135217%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    2,000 Followers - ₹499 <del style="color: #e60026;">₹699</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135217%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    5,000 Followers - ₹1,199 <del style="color: #e60026;">₹1,699</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135217%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    10,000 Followers - ₹2,299 <del style="color: #e60026;">₹3,299</del></p></div>
+  </div>
+</div>
+
+    <!-- Likes -->
+<div class="service-section">
+  <h3> 𝐋𝐈𝐊𝐄𝐒 </h3>
+  <div class="service-wrapper">
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135246%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    100 Likes - ₹6 <del style="color: #e60026;">₹10</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135246%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    200 Likes - ₹10 <del style="color: #e60026;">₹15</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135246%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    500 Likes - ₹19 <del style="color: #e60026;">₹29</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135246%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    1,000 Likes - ₹29 <del style="color: #e60026;">₹45</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135246%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    2,000 Likes - ₹49 <del style="color: #e60026;">₹69</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135246%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    5,000 Likes - ₹99 <del style="color: #e60026;">₹149</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135246%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    10,000 Likes - ₹199 <del style="color: #e60026;">₹299</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135246%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    20,000 Likes - ₹349 <del style="color: #e60026;">₹499</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135246%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    30,000 Likes - ₹499 <del style="color: #e60026;">₹699</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135246%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    50,000 Likes - ₹749 <del style="color: #e60026;">₹999</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135246%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    100,000 Likes - ₹1,299 <del style="color: #e60026;">₹1,899</del></p></div>
+  </div>
+</div>
+
+    <!-- Comments -->
+<div class="service-section">
+  <h3> 𝐂𝐎𝐌𝐌𝐄𝐍𝐓𝐒 </h3>
+  <div class="service-wrapper">
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135348%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    20 Comments - ₹5 <del style="color: #e60026;">₹10</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135348%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    40 Comments - ₹10 <del style="color: #e60026;">₹15</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135348%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    80 Comments - ₹20 <del style="color: #e60026;">₹30</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135348%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    160 Comments - ₹40 <del style="color: #e60026;">₹60</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135348%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    320 Comments - ₹80 <del style="color: #e60026;">₹120</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135348%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    640 Comments - ₹160 <del style="color: #e60026;">₹240</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135348%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    1,200 Comments - ₹300 <del style="color: #e60026;">₹450</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135348%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    2,500 Comments - ₹625 <del style="color: #e60026;">₹899</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135348%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    5,000 Comments - ₹1,250 <del style="color: #e60026;">₹1,899</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135348%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    10,000 Comments - ₹2,500 <del style="color: #e60026;">₹3,499</del></p></div>
+
+  </div>
+</div>
+
+    <!-- Shares -->
+<div class="service-section">
+  <h3> 𝐒𝐇𝐀𝐑𝐄𝐒 </h3>
+  <div class="service-wrapper">
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135405%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    100 Shares - ₹6 <del style="color: #e60026;">₹10</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135405%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    200 Shares - ₹10 <del style="color: #e60026;">₹15</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135405%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    500 Shares - ₹19 <del style="color: #e60026;">₹29</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135405%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    1,000 Shares - ₹29 <del style="color: #e60026;">₹45</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135405%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    2,000 Shares - ₹49 <del style="color: #e60026;">₹69</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135405%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    5,000 Shares - ₹99 <del style="color: #e60026;">₹149</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135405%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    10,000 Shares - ₹199 <del style="color: #e60026;">₹299</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135405%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    20,000 Shares - ₹349 <del style="color: #e60026;">₹499</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135405%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    30,000 Shares - ₹499 <del style="color: #e60026;">₹699</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135405%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    50,000 Shares - ₹749 <del style="color: #e60026;">₹999</del></p></div>
+
+  </div>
+</div>
+
+    <!-- Views -->
+<div class="service-section">
+  <h3> 𝐕𝐈𝐄𝐖𝐒 </h3>
+  <div class="service-wrapper">
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135324%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    200 Views - ₹6 <del style="color: #e60026;">₹9</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135324%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    500 Views - ₹10 <del style="color: #e60026;">₹15</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135324%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    1,000 Views - ₹19 <del style="color: #e60026;">₹29</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135324%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    2,000 Views - ₹29 <del style="color: #e60026;">₹45</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135324%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    5,000 Views - ₹54 <del style="color: #e60026;">₹79</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135324%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    10,000 Views - ₹99 <del style="color: #e60026;">₹149</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135324%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    20,000 Views - ₹199 <del style="color: #e60026;">₹299</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135324%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    30,000 Views - ₹299 <del style="color: #e60026;">₹499</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135324%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    50,000 Views - ₹449 <del style="color: #e60026;">₹649</del></p></div>
+
+    <div class="service"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250603_135324%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    100,000 Views - ₹749 <del style="color: #e60026;">₹1,099</del></p></div>
+
+  </div>
+</div>
+
+  </main>
+
+  <!-- Dark mode apply via localStorage -->
+  <script>
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark-mode");
+    }
+  </script>
+</body>
+</html>
