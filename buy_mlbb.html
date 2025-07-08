@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Buy MLBB Diamonds - EpicX</title>
+  <title>Instagram Services - EpicX</title>
   <script>
     (function () {
       const theme = localStorage.getItem('theme');
@@ -208,24 +208,25 @@
   <div class="instructions" style="margin-top: 20px;">
     <p>1. Tap on any payment method above to pay the exact amount.</p>
     <p>2. Take a screenshot of your payment confirmation.</p>
-    <p>3. Fill your MLBB ID, Zone ID and upload a screenshot below.</p>
+    <p>3. Fill your Instagram Username, Post Link and upload a screenshot below.</p>
   </div>
 
-  <input type="text" id="mlbbid" placeholder="MLBB ID" />
-  <input type="text" id="zoneid" placeholder="Zone ID" />
+  <input type="text" id="username" placeholder="Instagram Username" />
+  <input type="text" id="postLink" placeholder="Post Link (optional)" />
   <input type="file" id="paymentScreenshot" accept="image/*" />
   <button onclick="sendData()">CONFIRM</button>
 
+  <!-- Order Summary Modal -->
   <div id="orderModal">
     <div id="orderContent">
       <h2>✅ Purchase Details</h2>
-      <p><strong>Category:</strong> MLBB</p>
-      <p><strong>Plan:</strong> <span id="summaryItem"></span></p>
+      <p><strong>Product Info:</strong> <span id="summaryCategory"></span></p>
+      <p><strong>Purchase Item:</strong> <span id="summaryItem"></span></p>
       <p><strong>Amount:</strong> ₹<span id="summaryAmount"></span></p>
-      <p><strong>MLBB ID:</strong> <span id="summaryID"></span></p>
-      <p><strong>Zone ID:</strong> <span id="summaryZone"></span></p>
-      <p><strong>Status:</strong> <span style="color: green;">Success</span></p>
-      <p><strong>Date:</strong> <span id="summaryDate"></span></p>
+      <p><strong>Username:</strong> <span id="summaryUsername"></span></p>
+      <p><strong>Post Link:</strong> <span id="summaryPost"></span></p>
+      <p><strong>Order Status:</strong> <span style="color: green;">Success</span></p>
+      <p><strong>Order Date:</strong> <span id="summaryDate"></span></p>
       <button onclick="closeModal()">OK</button>
     </div>
   </div>
@@ -234,16 +235,22 @@
     function getQueryParams() {
       const params = new URLSearchParams(window.location.search);
       return {
-        plan: params.get("plan") || "1x Weekly Pass",
-        price: params.get("price") || "0"
+        plan: params.get("plan") || "1x Weekly Pass - ₹135"
       };
     }
 
-    function updateDisplayFromParams() {
-      const { plan, price } = getQueryParams();
-      const upiURL = `upi://pay?pa=bilachingman@oksbi&pn=EpicX&am=${price}&cu=INR`;
+    function extractPriceFromPlan(plan) {
+      const match = plan.match(/₹(\d+)/);
+      return match ? match[1] : "0";
+    }
 
-      document.getElementById("selectedInfo").innerText = `${plan}`;
+    function updateDisplayFromParams() {
+      const { plan } = getQueryParams();
+      const price = extractPriceFromPlan(plan);
+
+      document.getElementById("selectedInfo").innerText = plan;
+
+      const upiURL = `upi://pay?pa=bilachingman@oksbi&pn=EpicX&am=${price}&cu=INR`;
       const logoIds = ["upi", "paytm", "gpay", "phonepe", "fampay"];
       logoIds.forEach(id => {
         document.getElementById(`${id}Link`).href = upiURL;
@@ -253,19 +260,20 @@
 
     function closeModal() {
       document.getElementById("orderModal").style.display = "none";
-      document.getElementById("mlbbid").value = "";
-      document.getElementById("zoneid").value = "";
+      document.getElementById("username").value = "";
+      document.getElementById("postLink").value = "";
       document.getElementById("paymentScreenshot").value = "";
     }
 
     async function sendData() {
-      const { plan, price } = getQueryParams();
-      const mlbbid = document.getElementById("mlbbid").value.trim();
-      const zoneid = document.getElementById("zoneid").value.trim();
+      const { plan } = getQueryParams();
+      const price = extractPriceFromPlan(plan);
+      const username = document.getElementById("username").value.trim();
+      const postLink = document.getElementById("postLink").value.trim();
       const fileInput = document.getElementById("paymentScreenshot");
 
-      if (!mlbbid || !zoneid || fileInput.files.length === 0) {
-        alert("Please enter MLBB ID, Zone ID and upload screenshot.");
+      if (!username || fileInput.files.length === 0) {
+        alert("Please fill your Instagram Username and upload screenshot.");
         return;
       }
 
@@ -273,13 +281,13 @@
       const botToken = "8087900838:AAHILt-MC_CAYYIaTEzBqEoS8G50rrpP1V8";
       const chatId = "7325699012";
 
-      const caption = `📱 *New MLBB Order*\n\n🎮 Plan: ${plan}\n💰 Amount: ₹${price}\n🆔 MLBB ID: ${mlbbid}\n🔢 Zone ID: ${zoneid}`;
+      const caption = `📸 *New Instagram Order*\n\n📦 Plan: ${plan}\n💰 Amount: ₹${price}\n👤 Username: ${username}\n🔗 Post: ${postLink || 'N/A'}`;
 
       const formData = new FormData();
       formData.append("chat_id", chatId);
       formData.append("caption", caption);
       formData.append("photo", file);
-      formData.append("parse_mode", "HTML");
+      formData.append("parse_mode", "Markdown");
 
       try {
         const res = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
@@ -288,10 +296,11 @@
         });
         const result = await res.json();
         if (result.ok) {
+          document.getElementById("summaryCategory").textContent = plan.split("-")[0].trim();
           document.getElementById("summaryItem").textContent = plan;
           document.getElementById("summaryAmount").textContent = price;
-          document.getElementById("summaryID").textContent = mlbbid;
-          document.getElementById("summaryZone").textContent = zoneid;
+          document.getElementById("summaryUsername").textContent = username;
+          document.getElementById("summaryPost").textContent = postLink || "N/A";
           document.getElementById("summaryDate").textContent = new Date().toLocaleString();
           document.getElementById("orderModal").style.display = "flex";
         } else {
