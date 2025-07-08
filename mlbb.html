@@ -1,0 +1,442 @@
+<!DOCTYPE html><html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MLBB Diamonds - EpicX</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-color: #f8f8f8;
+      --text-color: #222;
+      --notice-bg: #ffe6e6;
+      --notice-border: #ff4d4d;
+      --notice-strong: #d60000;
+      --notice-text: #333;
+      --service-bg: #fff;
+      --service-border: #ddd;
+      --btn-bg: #000;
+      --btn-text: #fff;
+    }[data-theme="dark"] {
+  --bg-color: #121212;
+  --text-color: #f0f0f0;
+  --notice-bg: #2c1a1a;
+  --notice-border: #ff4d4d;
+  --notice-strong: #ff4d4d;
+  --notice-text: #e0e0e0;
+  --service-bg: #1e1e1e;
+  --service-border: #333;
+  --btn-bg: #fff;
+  --btn-text: #000;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+main {
+  padding: 20px;
+  max-width: 100%;
+  margin: auto;
+}
+
+h2 {
+  font-size: 2rem;
+  color: var(--text-color);
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.notice {
+  background-color: var(--notice-bg);
+  border: 1px solid var(--notice-border);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.notice strong {
+  font-size: 1.1rem;
+  color: var(--notice-strong);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.notice p {
+  font-size: 1rem;
+  color: var(--notice-text);
+  margin: 0 auto 15px;
+  max-width: 700px;
+}
+
+.notice .btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 6px;
+  min-width: 240px;
+}
+
+.service-section {
+  margin-bottom: 40px;
+}
+
+.service-section h3 {
+  font-size: 1.6rem;
+  margin-top: 30px;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.service-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
+  padding: 10px 0;
+}
+
+.service {
+  background-color: var(--service-bg);
+  padding: 12px;
+  border: 1px solid var(--service-border);
+  border-radius: 6px;
+  text-align: center;
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
+  transition: background-color 0.3s, color 0.3s, border 0.3s;
+  cursor: pointer;
+}
+
+.service.selected {
+  background-color: #ffe066 !important;
+  border: 2px solid #ffcc00;
+  color: #000000 !important;
+}
+
+.service.selected del {
+  color: #cc0000 !important;
+}
+
+.service p {
+  margin: 0 0 10px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .service p {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .service del {
+  color: #ff8080;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.service-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.service-wrapper::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.service-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.service .continue-btn {
+  margin-top: 10px;
+}
+
+  </style>
+  <script>
+    window.onload = function () {
+      const theme = localStorage.getItem("theme");
+      if (theme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+      } else {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    };document.addEventListener("DOMContentLoaded", function () {
+  const serviceBoxes = document.querySelectorAll(".service");
+
+  serviceBoxes.forEach((box) => {
+    box.addEventListener("click", function () {
+      serviceBoxes.forEach(b => {
+        b.classList.remove("selected");
+        const existingBtn = b.querySelector(".continue-btn");
+        if (existingBtn) existingBtn.remove();
+      });
+
+      box.classList.add("selected");
+
+      const pTag = box.querySelector("p");
+      if (!pTag) return;
+
+      const fullText = pTag.textContent.trim();
+      const splitIndex = fullText.lastIndexOf("\u20B9");
+      if (splitIndex === -1) return;
+
+      const plan = fullText.slice(0, splitIndex).replace(/[-–]\s*$/, "").trim();
+      const price = fullText.slice(splitIndex + 1).split(" ")[0].trim();
+
+      const button = document.createElement("a");
+      button.className = "continue-btn";
+      button.textContent = "Continue";
+      button.href = `buy_mlbb.html?plan=${encodeURIComponent(plan)}&price=${encodeURIComponent(price)}`;
+      button.style.display = "block";
+      button.style.marginTop = "10px";
+      button.style.backgroundColor = "#00bfff";
+      button.style.color = "#fff";
+      button.style.padding = "10px 18px";
+      button.style.borderRadius = "8px";
+      button.style.textDecoration = "none";
+      button.style.fontWeight = "bold";
+      button.style.textAlign = "center";
+
+      box.appendChild(button);
+    });
+  });
+
+  const firstBox = document.querySelector(".service");
+  if (firstBox) firstBox.click();
+});
+
+  </script>
+</head>
+<body>
+  <main>
+    <h2>⚡Instant Delivery Supported</h2>
+
+    <div class="notice">
+      <strong>🕒 𝐃𝐞𝐥𝐢𝐯𝐞𝐫𝐲 𝐓𝐢𝐦𝐞: Instant</strong>
+      <p></p>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px;">
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/IMG_20250602_144233.png" alt="EpicX Logo" style="width: 100%; max-width: 100vw; height: auto; display: block;" />
+    </div>
+
+    <!-- Weekly Pass -->
+<div class="service-section">
+  <h3> 𝗪𝗘𝗘𝗞𝗟𝗬 𝗣𝗔𝗦𝗦 </h3>
+  <div class="service-wrapper">
+    <div class="service selected"><p>
+    <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744165346001--weekly%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+    1x Weekly Pass - ₹135 <del style="color: #e60026;">₹180</del></p></div>
+
+    <div class="service" data-plan="2x Weekly Pass" data-price="260"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744165346001--weekly%20(1).png" style="width:40px; vertical-align:middle;"><br>
+      2x Weekly Pass - ₹260 <del style="color: #e60026;">₹360</del>
+    </p></div>
+
+    <div class="service" data-plan="3x Weekly Pass" data-price="385"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744165346001--weekly%20(1).png" style="width:40px; vertical-align:middle;"><br>
+      3x Weekly Pass - ₹385 <del style="color: #e60026;">₹540</del>
+    </p></div>
+
+    <div class="service" data-plan="4x Weekly Pass" data-price="510"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744165346001--weekly%20(1).png" style="width:40px; vertical-align:middle;"><br>
+      4x Weekly Pass - ₹510 <del style="color: #e60026;">₹720</del>
+    </p></div>
+
+    <div class="service" data-plan="5x Weekly Pass" data-price="635"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744165346001--weekly%20(1).png" style="width:40px; vertical-align:middle;"><br>
+      5x Weekly Pass - ₹635 <del style="color: #e60026;">₹899</del>
+    </p></div>
+
+    <div class="service" data-plan="1x Weekly Pass + 172 Diamonds" data-price="348"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744165346001--weekly%20(1).png" style="width:40px; vertical-align:middle;"><br>
+      1x WP + 172<span style="color:#fff; font-size:24px; text-shadow:0 0 5px #0ff, 0 0 10px #0ff;">💎</span> - ₹348 <del style="color: #e60026;">₹480</del>
+    </p></div>
+
+    <div class="service" data-plan="2x Weekly Pass + 706 Diamonds" data-price="1198"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744165346001--weekly%20(1).png" style="width:40px; vertical-align:middle;"><br>
+      2x WP + 706<span style="color:#fff; font-size:24px; text-shadow:0 0 5px #0ff, 0 0 10px #0ff;">💎</span> - ₹1198 <del style="color: #e60026;">₹1,600</del>
+    </p></div>
+
+    <div class="service" data-plan="Twilight Pass" data-price="688"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1747856824746--1738342492441--twilight-icon%20(1).png" style="width:35px; vertical-align:middle;"><br>
+      Twilight Pass - ₹688 <del style="color: #e60026;">₹899</del>
+    </p></div>
+  </div>
+</div>
+
+    <!-- First Top-Up -->
+<div class="service-section">
+  <h3> 𝗠𝗟𝗕𝗕 𝗙𝗶𝗿𝘀𝘁 𝗧𝗼𝗽-𝗨𝗽 </h3>
+  <div class="service-wrapper">
+    <div class="service selected" data-plan="100 Diamonds" data-price="75"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/oss-4c9d4d353c12530c42895a3c5f4483ab.png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+      100<span style="color:#fff; font-size:24px; text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;">💎</span> (50+50) - ₹75 <del style="color: #e60026;">₹80</del>
+    </p></div>
+
+    <div class="service" data-plan="300 Diamonds" data-price="215"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/oss-4c9d4d353c12530c42895a3c5f4483ab.png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+      300<span style="color:#fff; font-size:24px; text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;">💎</span> (150+150) - ₹215 <del style="color: #e60026;">₹280</del>
+    </p></div>
+
+    <div class="service" data-plan="500 Diamonds" data-price="335"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/oss-4c9d4d353c12530c42895a3c5f4483ab.png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+      500<span style="color:#fff; font-size:24px; text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;">💎</span> (250+250) - ₹335 <del style="color: #e60026;">₹430</del>
+    </p></div>
+
+    <div class="service" data-plan="1000 Diamonds" data-price="660"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/oss-4c9d4d353c12530c42895a3c5f4483ab.png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+      1000<span style="color:#fff; font-size:24px; text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;">💎</span> (500+500) - ₹660 <del style="color: #e60026;">₹840</del>
+    </p></div>
+  </div>
+</div>
+
+    <!-- Small Pack -->
+<div class="service-section">
+  <h3> 𝗠𝗟𝗕𝗕 𝗦𝗺𝗮𝗹𝗹 𝗣𝗮𝗰𝗸 </h3>
+  <div class="service-wrapper">
+    <div class="service selected" data-plan="3 Diamonds" data-price="10"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744647869049--small_pack%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+      3<span style="color:#fff; font-size:24px; text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;">💎</span> - ₹10 <del style="color: #e60026;">₹14</del>
+    </p></div>
+
+    <div class="service" data-plan="5 Diamonds" data-price="15"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744647869049--small_pack%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+      5<span style="color:#fff; font-size:24px; text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;">💎</span> - ₹15 <del style="color: #e60026;">₹19</del>
+    </p></div>
+
+    <div class="service" data-plan="11 Diamonds" data-price="25"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744647869049--small_pack%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+      11<span style="color:#fff; font-size:24px; text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;">💎</span> - ₹25 <del style="color: #e60026;">₹35</del>
+    </p></div>
+
+    <div class="service" data-plan="14 Diamonds" data-price="30"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744647869049--small_pack%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+      14<span style="color:#fff; font-size:24px; text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;">💎</span> - ₹30 <del style="color: #e60026;">₹40</del>
+    </p></div>
+
+    <div class="service" data-plan="22 Diamonds" data-price="45"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744647869049--small_pack%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+      22<span style="color:#fff; font-size:24px; text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;">💎</span> - ₹45 <del style="color: #e60026;">₹60</del>
+    </p></div>
+
+    <div class="service" data-plan="28 Diamonds" data-price="55"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744647869049--small_pack%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+      28<span style="color:#fff; font-size:24px; text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;">💎</span> - ₹55 <del style="color: #e60026;">₹75</del>
+    </p></div>
+
+    <div class="service" data-plan="42 Diamonds" data-price="75"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1744647869049--small_pack%20(1).png" alt="logo" style="width:40px; vertical-align:middle;"><br>
+      42<span style="color:#fff; font-size:24px; text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;">💎</span> - ₹75 <del style="color: #e60026;">₹89</del>
+    </p></div>
+  </div>
+</div>
+
+    <!-- Large Pack -->
+<div class="service-section">
+  <h3> 𝗠𝗟𝗕𝗕 𝗟𝗮𝗿𝗴𝗲 𝗣𝗮𝗰𝗸 </h3>
+  <div class="service-wrapper">
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      55💎 - ₹80 <del style="color: #e60026;">₹105</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      86💎 - ₹115 <del style="color: #e60026;">₹150</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      110💎 - ₹150 <del style="color: #e60026;">₹199</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      165💎 - ₹215 <del style="color: #e60026;">₹280</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      172💎 - ₹220 <del style="color: #e60026;">₹290</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      257💎 - ₹325 <del style="color: #e60026;">₹430</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      275💎 - ₹335 <del style="color: #e60026;">₹450</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      343💎 - ₹430 <del style="color: #e60026;">₹570</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      429💎 - ₹535 <del style="color: #e60026;">₹710</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      514💎 - ₹630 <del style="color: #e60026;">₹840</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      565💎 - ₹675 <del style="color: #e60026;">₹899</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      706💎 - ₹855 <del style="color: #e60026;">₹1,140</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      963💎 - ₹1,190 <del style="color: #e60026;">₹1,600</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      1049💎 - ₹1,290 <del style="color: #e60026;">₹1,750</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      1130💎 - ₹1,370 <del style="color: #e60026;">₹1,850</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      1220💎 - ₹1,475 <del style="color: #e60026;">₹1,999</del>
+    </p></div>
+
+    <div class="service"><p>
+      <img src="https://raw.githubusercontent.com/epicxofficialstore/Payment-logo/refs/heads/main/1745483401393--WhatsApp-Image-2025-04-24-at-13.45.32_6447d24d%20(1).png" alt="" style="width:80px; vertical-align:middle;"><br>
+      1412💎 - ₹1,750 <del style="color: #e60026;">₹2,399</del>
+    </p></div>
+
+  </div>
+</div>
