@@ -243,7 +243,7 @@
       const { plan, price } = getQueryParams();
       const upiURL = `upi://pay?pa=bilachingman@oksbi&pn=EpicX&am=${price}&cu=INR`;
 
-      document.getElementById("selectedInfo").innerText = `${plan} – ₹${price}`;
+      document.getElementById("selectedInfo").innerText = `${plan}`;
       const logoIds = ["upi", "paytm", "gpay", "phonepe", "fampay"];
       logoIds.forEach(id => {
         document.getElementById(`${id}Link`).href = upiURL;
